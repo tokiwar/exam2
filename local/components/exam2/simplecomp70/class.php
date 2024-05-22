@@ -17,6 +17,8 @@ class SimpleComp70 extends CBitrixComponent
 
     public function executeComponent()
     {
+        global $APPLICATION;
+        $this->arResult['COUNT'] = 0;
         if ($this->arParams['PRODUCTS_IBLOCK_ID'] && $this->arParams['SIMPLECOMP_EXAM2_NEWS_IBLOCK_ID'] && $this->arParams['SIMPLECOMP_EXAM2_TYPE_PROP']) {
             if ($this->StartResultCache()) {
                 $this->getSections();
@@ -31,6 +33,7 @@ class SimpleComp70 extends CBitrixComponent
                 $this->setResultCacheKeys(['COUNT']);
             }
         }
+        $APPLICATION->SetTitle(GetMessage('ITEMS_COUNT_SIMPLE') . $this->arResult['COUNT']);
         $this->includeComponentTemplate();
     }
 
