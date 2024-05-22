@@ -2,6 +2,7 @@
 IncludeModuleLangFile(__FILE__);
 AddEventHandler("iblock", "OnBeforeIBlockElementUpdate", array("Exam2", "OnBeforeIBlockElementUpdateHandler"));
 AddEventHandler("main", "OnEpilog", array("Exam2", "OnEpilogHandler"));
+AddEventHandler("main", "OnBeforeEventAdd", array("Exam2", "OnBeforeEventAddHandler"));
 
 class Exam2
 {
@@ -29,6 +30,25 @@ class Exam2
                 "AUDIT_TYPE_ID" => "ERROR_404",
                 "MODULE_ID" => "main",
                 "DESCRIPTION" => $APPLICATION->GetCurUri()
+            ));
+        }
+    }
+
+    public static function OnBeforeEventAddHandler(&$event, &$lid, &$arFields)
+    {
+        if ($event == 'FEEDBACK_FORM') {
+            global $USER;
+            if ($USER->IsAuthorized()) {
+                $newAuthorName = GetMessage('AUTHOR_AUTH', ['#ID#' => $USER->GetID(), '#NAME#' => $USER->GetFullName(), '#LOGIN#' => $USER->GetLogin(), '#FORM_NAME#' => $arFields['AUTHOR']]);
+            } else {
+                $newAuthorName = GetMessage('AUTHOR_NON_AUTH', ['#FORM_NAME#' => $arFields['AUTHOR']]);
+            }
+            $arFields['AUTHOR'] = $newAuthorName;
+            CEventLog::Add(array(
+                "SEVERITY" => "INFO",
+                "AUDIT_TYPE_ID" => "AUTHOR_REPLACE",
+                "MODULE_ID" => "main",
+                "DESCRIPTION" => GetMessage('AUTHOR_REPLACE', ['#AUTHOR#' => $arFields['AUTHOR']])
             ));
         }
     }
