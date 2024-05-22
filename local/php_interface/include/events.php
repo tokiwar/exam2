@@ -1,6 +1,7 @@
 <?php
 IncludeModuleLangFile(__FILE__);
 AddEventHandler("iblock", "OnBeforeIBlockElementUpdate", array("Exam2", "OnBeforeIBlockElementUpdateHandler"));
+AddEventHandler("main", "OnEpilog", array("Exam2", "OnEpilogHandler"));
 
 class Exam2
 {
@@ -17,5 +18,18 @@ class Exam2
             }
         }
         return true;
+    }
+
+    public static function OnEpilogHandler()
+    {
+        if (defined('ERROR_404') && ERROR_404 == 'Y') {
+            global $APPLICATION;
+            CEventLog::Add(array(
+                "SEVERITY" => "SECURITY",
+                "AUDIT_TYPE_ID" => "ERROR_404",
+                "MODULE_ID" => "main",
+                "DESCRIPTION" => $APPLICATION->GetCurUri()
+            ));
+        }
     }
 }
