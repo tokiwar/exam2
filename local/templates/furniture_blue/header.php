@@ -102,6 +102,7 @@ $APPLICATION->IncludeFile(
 	"MENU_CACHE_USE_GROUPS" => "Y",
 	"MENU_CACHE_GET_VARS" => array(
 	),
+    'CACHE_SELECTED_ITEMS' => 'Y',
 	"MAX_LEVEL" => "1",
 	"CHILD_MENU_TYPE" => "left",
 	"USE_EXT" => "Y",
