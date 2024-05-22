@@ -14,15 +14,6 @@
 !/bitrix/components/
 /bitrix/components/bitrix/
 
-# сохраняем весь php_interface за редкими исключениями
-!/bitrix/php_interface/
-/bitrix/php_interface/dbconn.ph*
-/bitrix/php_interface/after_connect*
-/bitrix/php_interface/logs/
-
-# сохраняем шаблоны сайта
-!/bitrix/templates/
-
 #Local собираем
 !/local/
 !/bitrix/.settings_extra.php
