@@ -3,6 +3,7 @@ IncludeModuleLangFile(__FILE__);
 AddEventHandler("iblock", "OnBeforeIBlockElementUpdate", array("Exam2", "OnBeforeIBlockElementUpdateHandler"));
 AddEventHandler("main", "OnEpilog", array("Exam2", "OnEpilogHandler"));
 AddEventHandler("main", "OnBeforeEventAdd", array("Exam2", "OnBeforeEventAddHandler"));
+AddEventHandler("main", "OnBuildGlobalMenu", array("Exam2", "OnBuildGlobalMenuHandler"));
 
 class Exam2
 {
@@ -50,6 +51,33 @@ class Exam2
                 "MODULE_ID" => "main",
                 "DESCRIPTION" => GetMessage('AUTHOR_REPLACE', ['#AUTHOR#' => $arFields['AUTHOR']])
             ));
+        }
+    }
+
+    public static function OnBuildGlobalMenuHandler(&$aGlobalMenu, &$aModuleMenu)
+    {
+        global $USER;
+        if (!$USER->isAdmin()) {
+            $req = \CGroup::GetList($by = 'c_sort', $order = 'asc', ['STRING_ID' => 'content_editor']);
+            if ($res = $req->fetch()) {
+                $contentId = $res['ID'];
+                $groups = CUser::GetUserGroup($USER->GetId());
+                if (in_array($contentId, $groups)) {
+                    $aGlobalMenu = ['global_menu_content' => $aGlobalMenu['global_menu_content']];
+                    $menuContent = current(array_filter($aModuleMenu, function ($item) {
+                        return $item['items_id'] == 'menu_iblock_/news';
+                    }));
+                    if ($menuContent) {
+                        $menuContentNews = current(array_filter($menuContent['items'], function ($item) {
+                            return $item['items_id'] == 'menu_iblock_/news/' . NEWS_IBLOCK_ID;
+                        }));
+                        if ($menuContentNews) {
+                            $menuContent['items'] = [$menuContentNews];
+                            $aModuleMenu = [$menuContent];
+                        }
+                    }
+                }
+            }
         }
     }
 }
