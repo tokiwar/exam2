@@ -12,4 +12,9 @@ $arTemplateParameters = array(
         'PARENT' => 'BASE',
         "DEFAULT" => "Y",
     ),
+    "IBLOCK_ID_CANONICAL" => array(
+        "NAME" => GetMessage("IBLOCK_ID_CANONICAL"),
+        "TYPE" => "STRING",
+        'PARENT' => 'BASE',
+    ),
 );
