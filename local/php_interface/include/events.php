@@ -4,6 +4,7 @@ AddEventHandler("iblock", "OnBeforeIBlockElementUpdate", array("Exam2", "OnBefor
 AddEventHandler("main", "OnEpilog", array("Exam2", "OnEpilogHandler"));
 AddEventHandler("main", "OnBeforeEventAdd", array("Exam2", "OnBeforeEventAddHandler"));
 AddEventHandler("main", "OnBuildGlobalMenu", array("Exam2", "OnBuildGlobalMenuHandler"));
+AddEventHandler("main", "OnBeforeProlog", array("Exam2", "OnBeforePrologHandler"));
 
 class Exam2
 {
@@ -76,6 +77,23 @@ class Exam2
                             $aModuleMenu = [$menuContent];
                         }
                     }
+                }
+            }
+        }
+    }
+
+    public static function OnBeforePrologHandler()
+    {
+        global $APPLICATION;
+        $curPage = $APPLICATION->GetCurPage();
+        if (\Bitrix\Main\Loader::includeModule('iblock')) {
+            $req = \CIBlockElement::GetList([], ['IBLOCK_ID' => SEO_IBLOCK_ID, 'ACTIVE' => 'Y', '=NAME' => $curPage], false, false, ['ID', 'IBLOCK_ID', 'NAME', 'ACTIVE', 'PROPERTY_TITLE', 'PROPERTY_DESCRIPTION']);
+            if ($res = $req->fetch()) {
+                if ($res['PROPERTY_TITLE_VALUE']) {
+                    $APPLICATION->SetPageProperty('title', $res['PROPERTY_TITLE_VALUE']);
+                }
+                if ($res['PROPERTY_DESCRIPTION_VALUE']) {
+                    $APPLICATION->SetPageProperty('description', $res['PROPERTY_DESCRIPTION_VALUE']);
                 }
             }
         }
