@@ -21,6 +21,14 @@ class SimpleComp70 extends CBitrixComponent
         $this->arResult['COUNT'] = 0;
         $request = isset($_REQUEST['F']);
         if ($this->arParams['PRODUCTS_IBLOCK_ID'] && $this->arParams['SIMPLECOMP_EXAM2_NEWS_IBLOCK_ID'] && $this->arParams['SIMPLECOMP_EXAM2_TYPE_PROP']) {
+            $arButtons = CIblock::GetPanelButtons($this->arParams['PRODUCTS_IBLOCK_ID']);
+            $this->AddIncludeAreaIcon(array(
+
+                'URL' => $arButtons["submenu"]["element_list"]["ACTION_URL"],
+                'TITLE' => GetMessage('IB_V_ADMINKE'),
+                "IN_PARAMS_MENU" => true,
+                
+            ));
             if ($this->StartResultCache(false, [$request])) {
                 $this->getSections();
                 if ($this->arResult['SECTIONS']) {
