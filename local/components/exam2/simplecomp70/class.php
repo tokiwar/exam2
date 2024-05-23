@@ -19,16 +19,20 @@ class SimpleComp70 extends CBitrixComponent
     {
         global $APPLICATION;
         $this->arResult['COUNT'] = 0;
+        $request = isset($_REQUEST['F']);
         if ($this->arParams['PRODUCTS_IBLOCK_ID'] && $this->arParams['SIMPLECOMP_EXAM2_NEWS_IBLOCK_ID'] && $this->arParams['SIMPLECOMP_EXAM2_TYPE_PROP']) {
-            if ($this->StartResultCache()) {
+            if ($this->StartResultCache(false, [$request])) {
                 $this->getSections();
                 if ($this->arResult['SECTIONS']) {
-                    $this->getItems();
+                    $this->getItems($request);
                     if ($this->arResult['ITEMS']) {
                         $this->getNews();
                         $this->setItemsToSections();
                         $this->setSectionsToNews();
                     }
+                }
+                if ($request) {
+                    $this->abortResultCache();
                 }
                 $this->setResultCacheKeys(['COUNT']);
             }
@@ -93,11 +97,21 @@ class SimpleComp70 extends CBitrixComponent
         $this->arResult['SECTIONS'] = $result;
     }
 
-    private function getItems()
+    private function getItems(bool $request)
     {
         $result = [];
         $sectionsIds = array_keys($this->arResult['SECTIONS']);
-        $req = \CIBlockElement::GetList([], ['ACTIVE' => 'Y', 'IBLOCK_ID' => $this->arParams['PRODUCTS_IBLOCK_ID'], 'IBLOCK_SECTION_ID' => $sectionsIds], false, false, ['ID', 'IBLOCK_ID', 'IBLOCK_SECTION_ID', 'NAME', 'PROPERTY_PRICE', 'PROPERTY_MATERIAL', 'PROPERTY_ARTNUMBER']);
+        $filter = ['ACTIVE' => 'Y', 'IBLOCK_ID' => $this->arParams['PRODUCTS_IBLOCK_ID'], 'IBLOCK_SECTION_ID' => $sectionsIds];
+        if ($request) {
+            $filter[] = [
+                'LOGIC' => 'OR',
+                ['<=PROPERTY_PRICE' => 1700, 'PROPERTY_MATERIAL' => 'Дерево, ткань'],
+                ['<PROPERTY_PRICE' => 1500, 'PROPERTY_MATERIAL' => 'Металл, пластик'],
+            ];
+        }
+        $req = \CIBlockElement::GetList([],
+            $filter
+            , false, false, ['ID', 'IBLOCK_ID', 'IBLOCK_SECTION_ID', 'NAME', 'PROPERTY_PRICE', 'PROPERTY_MATERIAL', 'PROPERTY_ARTNUMBER']);
         $itemsCount = 0;
         while ($res = $req->Fetch()) {
             $itemsCount++;

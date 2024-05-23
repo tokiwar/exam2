@@ -1,8 +1,13 @@
 <?php if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) die();
 /**
  * @var array $arResult
+ * @global $APPLICATION
  */
+$url = $APPLICATION->GetCurPage() . '?F=Y';
+?>
+<?php
 if ($arResult['NEWS']):?>
+    <?= GetMessage('FILTER_PAGE') ?> <a href='<?= $url ?>'><?= $url ?></a>
     <ul>
         <?php foreach ($arResult['NEWS'] as $newsItem): ?>
             <li>
