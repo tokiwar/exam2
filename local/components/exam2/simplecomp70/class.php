@@ -53,6 +53,7 @@ class SimpleComp70 extends CBitrixComponent
             ['ID', 'IBLOCK_ID', 'NAME', 'ACTIVE_FROM']);
         while ($res = $req->Fetch()) {
             $result[$res['ID']] = [
+                'ID' => $res['ID'],
                 'ACTIVE_FROM' => $res['ACTIVE_FROM'],
                 'NAME' => $res['NAME'],
                 'ITEMS' => [],
@@ -114,12 +115,18 @@ class SimpleComp70 extends CBitrixComponent
             , false, false, ['ID', 'IBLOCK_ID', 'IBLOCK_SECTION_ID', 'NAME', 'PROPERTY_PRICE', 'PROPERTY_MATERIAL', 'PROPERTY_ARTNUMBER']);
         $itemsCount = 0;
         while ($res = $req->Fetch()) {
+            $arButtons = CIBlock::GetPanelButtons($res['IBLOCK_ID'], $res['ID'], 0, ['SECTION_BUTTONS' => false, 'SESSID' => false]);
             $itemsCount++;
             $result[$res['IBLOCK_SECTION_ID']][] = [
+                'ID' => $res['ID'],
+                'IBLOCK_ID' => $res['IBLOCK_ID'],
                 'NAME' => $res['NAME'],
                 'PRICE' => $res['PROPERTY_PRICE_VALUE'],
                 'ARTNUMBER' => $res['PROPERTY_ARTNUMBER_VALUE'],
-                'MATERIAL' => $res['PROPERTY_MATERIAL_VALUE']
+                'MATERIAL' => $res['PROPERTY_MATERIAL_VALUE'],
+                'ADD_LINK' => $arButtons['edit']['add_element']['ACTION_URL'],
+                'EDIT_LINK' => $arButtons['edit']['edit_element']['ACTION_URL'],
+                'DELETE_LINK' => $arButtons['edit']['delete_element']['ACTION_URL'],
             ];
         }
         $this->arResult['COUNT'] = $itemsCount;

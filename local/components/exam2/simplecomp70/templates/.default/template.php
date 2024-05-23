@@ -15,7 +15,12 @@ if ($arResult['NEWS']):?>
                 (<?= implode(', ', $newsItem['SECTION_NAMES']) ?>)
                 <ul>
                     <?php foreach ($newsItem['ITEMS'] as $item): ?>
-                        <li>
+                        <?php
+                        $this->AddEditAction($newsItem['ID'] . '_' . $item['ID'], $item['EDIT_LINK'], CIBlock::GetArrayByID($item['IBLOCK_ID'], "ELEMENT_EDIT"));
+                        $this->AddEditAction($newsItem['ID'] . '_' . $item['ID'], $item['ADD_LINK'], CIBlock::GetArrayByID($item["IBLOCK_ID"], "ELEMENT_ADD"));
+                        $this->AddDeleteAction($newsItem['ID'] . '_' . $item['ID'], $item['DELETE_LINK'], CIBlock::GetArrayByID($item["IBLOCK_ID"], "ELEMENT_DELETE"), ['CONFIRM' => GetMessage('PAGE_DELETE_ITEM')]);
+                        ?>
+                        <li id="<?= $this->GetEditAreaId($newsItem['ID'] . '_' . $item['ID']) ?>">
                             <?= $item['NAME'] ?> - <?= $item['PRICE'] ?> - <?= $item['MATERIAL'] ?>
                             - <?= $item['ARTNUMBER'] ?>
                         </li>
