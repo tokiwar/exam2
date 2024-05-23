@@ -11,7 +11,8 @@ $APPLICATION->SetTitle("Простой компонент - 71");
 		"PRODUCTS_IBLOCK_ID" => "2",
 		"SIMPLECOMP_EXAM2_NEWS_IBLOCK_ID" => "7",
 		"SIMPLECOMP_EXAM2_TYPE_PROP" => "FIRMA",
-		"SIMPLECOMP_EXAM2_LINK_TEMPLATE" => "catalog_exam/#SECTION_ID#/#ELEMENT_CODE#"
+		"SIMPLECOMP_EXAM2_LINK_TEMPLATE" => "catalog_exam/#SECTION_ID#/#ELEMENT_CODE#",
+		"SIMPLECOMP_EXAM2_PAGE_ITEMS" => "2"
 	),
 	false
 );?><?require($_SERVER["DOCUMENT_ROOT"]."/bitrix/footer.php");?>

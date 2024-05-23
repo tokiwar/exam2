@@ -18,4 +18,5 @@ if ($arResult['FIRMS']):?>
             </li>
         <?php endforeach; ?>
     </ul>
+    <?= $arResult['NAV_STRING'] ?>
 <?php endif; ?>

@@ -9,6 +9,7 @@ class SimpleComp71 extends CBitrixComponent
         $arParams['PRODUCTS_IBLOCK_ID'] = intval($arParams['PRODUCTS_IBLOCK_ID']);
         $arParams['SIMPLECOMP_EXAM2_NEWS_IBLOCK_ID'] = intval($arParams['SIMPLECOMP_EXAM2_NEWS_IBLOCK_ID']);
         $arParams['SIMPLECOMP_EXAM2_TYPE_PROP'] = trim($arParams['SIMPLECOMP_EXAM2_TYPE_PROP']);
+        $arParams['SIMPLECOMP_EXAM2_PAGE_ITEMS'] = intval($arParams['SIMPLECOMP_EXAM2_PAGE_ITEMS']) ?: 1;
         if (!$arParams["CACHE_TIME"]) {
             $arParams["CACHE_TIME"] = 36000000;
         }
@@ -20,12 +21,15 @@ class SimpleComp71 extends CBitrixComponent
         global $APPLICATION;
         $this->arResult['COUNT'] = 0;
         if ($this->arParams['PRODUCTS_IBLOCK_ID'] && $this->arParams['SIMPLECOMP_EXAM2_NEWS_IBLOCK_ID'] && $this->arParams['SIMPLECOMP_EXAM2_TYPE_PROP']) {
-            if ($this->StartResultCache()) {
+            $navParams = CDBResult::GetNavParams([
+                'nPageSize' => $this->arParams['SIMPLECOMP_EXAM2_PAGE_ITEMS'],
+            ]);
+            if ($this->StartResultCache(false, [$navParams])) {
                 $this->getProducts();
                 if ($this->arResult['PRODUCTS']) {
                     $this->getFirms();
                 }
-                $this->setResultCacheKeys(['COUNT']);
+                $this->setResultCacheKeys(['COUNT', 'NAV_STRING']);
             }
         }
         $APPLICATION->SetTitle(GetMessage('ITEMS_COUNT_SIMPLE') . $this->arResult['COUNT']);
@@ -40,7 +44,8 @@ class SimpleComp71 extends CBitrixComponent
             $firmIds = array_merge($firmIds, $product['FIRMA']);
         }
         $firmIds = array_unique($firmIds);
-        $req = \CIBlockElement::GetList([], ['ACTIVE' => 'Y', 'IBLOCK_ID' => $this->arParams['SIMPLECOMP_EXAM2_NEWS_IBLOCK_ID'], 'ID' => $firmIds], false, false, ['ID', 'IBLOCK_ID', 'NAME']);
+        $req = \CIBlockElement::GetList([], ['ACTIVE' => 'Y', 'IBLOCK_ID' => $this->arParams['SIMPLECOMP_EXAM2_NEWS_IBLOCK_ID'], 'ID' => $firmIds], false, ['nPageSize' => $this->arParams['SIMPLECOMP_EXAM2_PAGE_ITEMS']], ['ID', 'IBLOCK_ID', 'NAME']);
+        $this->arResult['NAV_STRING'] = $req->GetPageNavString(GetMessage('FIRMS_NAVS'));
         while ($res = $req->Fetch()) {
             $tempRes = [
                 'NAME' => $res['NAME'],

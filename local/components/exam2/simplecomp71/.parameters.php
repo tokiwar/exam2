@@ -18,6 +18,11 @@ $arComponentParameters = array(
             "NAME" => GetMessage("SIMPLECOMP_EXAM2_LINK_TEMPLATE"),
             "TYPE" => "STRING",
         ),
+        "SIMPLECOMP_EXAM2_PAGE_ITEMS" => array(
+            "NAME" => GetMessage("SIMPLECOMP_EXAM2_PAGE_ITEMS"),
+            "TYPE" => "STRING",
+            'DEFAULT' => 1
+        ),
         "CACHE_TIME" => ["DEFAULT" => 36000000],
     ),
 );
