@@ -21,10 +21,12 @@ class SimpleComp71 extends CBitrixComponent
         global $APPLICATION;
         $this->arResult['COUNT'] = 0;
         if ($this->arParams['PRODUCTS_IBLOCK_ID'] && $this->arParams['SIMPLECOMP_EXAM2_NEWS_IBLOCK_ID'] && $this->arParams['SIMPLECOMP_EXAM2_TYPE_PROP']) {
+            global $CACHE_MANAGER;
             $navParams = CDBResult::GetNavParams([
                 'nPageSize' => $this->arParams['SIMPLECOMP_EXAM2_PAGE_ITEMS'],
             ]);
             if ($this->StartResultCache(false, [$navParams])) {
+                $CACHE_MANAGER->RegisterTag('iblock_id_3');
                 $this->getProducts();
                 if ($this->arResult['PRODUCTS']) {
                     $this->getFirms();

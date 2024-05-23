@@ -4,6 +4,7 @@
  */
 if ($arResult['FIRMS']):?>
     <ul>
+        <?= GetMessage('TIME_RESET') . time(); ?>
         <?php foreach ($arResult['FIRMS'] as $firm): ?>
             <li>
                 <b><?= $firm['NAME'] ?></b>
