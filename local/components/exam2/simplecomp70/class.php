@@ -27,7 +27,7 @@ class SimpleComp70 extends CBitrixComponent
                 'URL' => $arButtons["submenu"]["element_list"]["ACTION_URL"],
                 'TITLE' => GetMessage('IB_V_ADMINKE'),
                 "IN_PARAMS_MENU" => true,
-                
+
             ));
             if ($this->StartResultCache(false, [$request])) {
                 $this->getSections();
@@ -42,10 +42,13 @@ class SimpleComp70 extends CBitrixComponent
                 if ($request) {
                     $this->abortResultCache();
                 }
-                $this->setResultCacheKeys(['COUNT']);
+                $this->setResultCacheKeys(['COUNT', 'MAX_PRICE', 'MIN_PRICE']);
             }
         }
         $APPLICATION->SetTitle(GetMessage('ITEMS_COUNT_SIMPLE') . $this->arResult['COUNT']);
+        if ($this->arResult['MAX_PRICE'] && $this->arResult['MIN_PRICE']) {
+            $APPLICATION->AddViewContent('prices', '<div style="color:red; margin: 34px 15px 35px 15px">' . GetMessage('MAX_MIN_PRICE', ['#MAX_PRICE#' => $this->arResult['MAX_PRICE'], '#MIN_PRICE#' => $this->arResult['MIN_PRICE']]) . '</div>');
+        }
         $this->includeComponentTemplate();
     }
 
@@ -122,9 +125,13 @@ class SimpleComp70 extends CBitrixComponent
             $filter
             , false, false, ['ID', 'IBLOCK_ID', 'IBLOCK_SECTION_ID', 'NAME', 'PROPERTY_PRICE', 'PROPERTY_MATERIAL', 'PROPERTY_ARTNUMBER']);
         $itemsCount = 0;
+        $prices = [];
         while ($res = $req->Fetch()) {
             $arButtons = CIBlock::GetPanelButtons($res['IBLOCK_ID'], $res['ID'], 0, ['SECTION_BUTTONS' => false, 'SESSID' => false]);
             $itemsCount++;
+            if ($res['PROPERTY_PRICE_VALUE']) {
+                $prices[] = $res['PROPERTY_PRICE_VALUE'];
+            }
             $result[$res['IBLOCK_SECTION_ID']][] = [
                 'ID' => $res['ID'],
                 'IBLOCK_ID' => $res['IBLOCK_ID'],
@@ -137,6 +144,8 @@ class SimpleComp70 extends CBitrixComponent
                 'DELETE_LINK' => $arButtons['edit']['delete_element']['ACTION_URL'],
             ];
         }
+        $this->arResult['MAX_PRICE'] = max($prices);
+        $this->arResult['MIN_PRICE'] = min($prices);
         $this->arResult['COUNT'] = $itemsCount;
         $this->arResult['ITEMS'] = $result;
     }
