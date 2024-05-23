@@ -60,14 +60,15 @@ class SimpleComp71 extends CBitrixComponent
     {
         $result = [];
         $count = 0;
-        $req = \CIBlockElement::GetList([], ['ACTIVE' => 'Y', 'IBLOCK_ID' => $this->arParams['PRODUCTS_IBLOCK_ID'], '!PROPERTY_' . $this->arParams['SIMPLECOMP_EXAM2_TYPE_PROP'] => false], false, false, ['ID', 'DETAIL_PAGE_URL', 'IBLOCK_ID', 'NAME',]);
+        $req = \CIBlockElement::GetList(['NAME' => 'ASC', 'SORT' => 'ASC'], ['ACTIVE' => 'Y', 'IBLOCK_ID' => $this->arParams['PRODUCTS_IBLOCK_ID'], '!PROPERTY_' . $this->arParams['SIMPLECOMP_EXAM2_TYPE_PROP'] => false], false, false, ['ID', 'CODE', 'DETAIL_PAGE_URL', 'IBLOCK_SECTION_ID', 'IBLOCK_ID', 'NAME',]);
+        $urlTemplate = $this->arParams['SIMPLECOMP_EXAM2_LINK_TEMPLATE'];
         while ($res = $req->GetNextElement()) {
             $count++;
             $resData = $res->GetFields();
             $properties = $res->GetProperties();
             $result[$resData['ID']] = [
                 'NAME' => $resData['NAME'],
-                'URL' => $resData['DETAIL_PAGE_URL'],
+                'URL' => $urlTemplate ? (str_replace(['#SECTION_ID#', '#ELEMENT_CODE#'], [$resData['IBLOCK_SECTION_ID'], $resData['CODE']], $urlTemplate) . '.php') : $resData['DETAIL_PAGE_URL'],
                 'PRICE' => $properties['PRICE']['VALUE'],
                 'MATERIAL' => $properties['MATERIAL']['VALUE'],
                 'ARTNUMBER' => $properties['ARTNUMBER']['VALUE'],
