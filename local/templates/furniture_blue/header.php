@@ -114,6 +114,7 @@ IncludeTemplateLangFile(__FILE__);
                     "ACTIVE_COMPONENT" => "Y"
                 )
             ); ?>
+
             <div class="content-block">
                 <div class="content-block-inner">
                     <h3><?= GetMessage('CFT_NEWS') ?></h3>
@@ -124,6 +125,20 @@ IncludeTemplateLangFile(__FILE__);
                         array("MODE" => "html")
                     );
                     ?>
+                </div>
+            </div>
+            <div class="content-block">
+                <div class="content-block-inner">
+                    <h3><?= GetMessage('CFT_LANG_CANGE') ?></h3>
+                    <?
+                    $APPLICATION->IncludeComponent("bitrix:main.site.selector", "dropdownSelect", Array(
+                        "COMPONENT_TEMPLATE" => "dropdown",
+                        "SITE_LIST" => "",	// Sites List
+                        "CACHE_TYPE" => "A",	// Cache type
+                        "CACHE_TIME" => "3600",	// Cache time (sec.)
+                    ),
+                        false
+                    );?>
                 </div>
             </div>
             <?php $APPLICATION->ShowViewContent('prices'); ?>
