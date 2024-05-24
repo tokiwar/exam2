@@ -8,3 +8,6 @@ if (!defined('BLOCK_NONACTIVE_COUNTER')) {
 if (!defined('SEO_IBLOCK_ID')) {
     define('SEO_IBLOCK_ID', 6);
 }
+if (!defined('COMP_IBLOCK_ID')) {
+    define('COMP_IBLOCK_ID', 8);
+}

@@ -17,4 +17,10 @@ $arTemplateParameters = array(
         "TYPE" => "STRING",
         'PARENT' => 'BASE',
     ),
+    'COLLECT_BAD_WITH_AJAX' => array(
+        "NAME" => GetMessage("COLLECT_BAD_WITH_AJAX"),
+        "TYPE" => "CHECKBOX",
+        'PARENT' => 'BASE',
+        "DEFAULT" => "Y",
+    )
 );
